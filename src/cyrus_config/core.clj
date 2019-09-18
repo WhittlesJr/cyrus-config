@@ -64,7 +64,7 @@
                                (catch Exception e
                                  {}))
         effective-definition (effective-config-definition name evaled-definition)
-        {:keys [default var-name required schema spec]} effective-definition
+        {:keys [default var-name required schema spec coerce]} effective-definition
         [raw-value source] (find-in-sources var-name [[:override *env-override*]
                                                       [:environment system-env]
                                                       [:default (when (some? default)
@@ -76,6 +76,10 @@
                         (when (some? raw-value)
                           (try
                             (cond
+                              (and spec coerce)
+                              (let [value (coerce raw-value)]
+                                (s/assert spec value)
+                                [value])
                               spec
                               [(c/coerce-to-spec spec raw-value)]
                               schema
