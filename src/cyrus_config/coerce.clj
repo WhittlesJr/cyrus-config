@@ -62,13 +62,12 @@
   (get known-parsers spec spec))
 
 
-(defn coerce-to-spec [spec data]
-  (let [spec-with-conformer (conformer-for-spec spec)
-        result              (s/conform spec-with-conformer data)]
-    (if (= result ::s/invalid)
-      (throw (Exception. (str "Error coercing " (pr-str data) ": "
-                              (str/trim-newline (s/explain-str spec-with-conformer data)))))
-      (sc/coerce spec data))))
+(defmacro coerce-to-spec [spec data]
+  `(let [result# (sc/coerce ~spec ~data)]
+     (if (= result# ::s/invalid)
+       (throw (Exception. (str "Error coercing " (pr-str ~data) ": "
+                               (str/trim-newline (s/explain-str ~spec ~data)))))
+       result#)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
