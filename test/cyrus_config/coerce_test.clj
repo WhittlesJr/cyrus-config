@@ -48,7 +48,12 @@
       "a" int? #"\"a\" - failed: parseInt"
       1.0 int? #"1.0 - failed: parseInt"
       "[1 2" (from-edn (s/coll-of int?)) #"\"\[1 2\" - failed: read-string"
-      "[1 1.5]" (from-edn (s/coll-of int?)) #"1.5 - failed: int\? in: \[1\]")))
+      "[1 1.5]" (from-edn (s/coll-of int?)) #"1.5 - failed: int\? in: \[1\]"))
+
+  (testing "Works with branching specs"
+    (are [?in ?spec ?out]
+        (= ?out (coerce-to-spec ?spec ?in))
+      ":a" (s/or :kw (from-edn #{:a}) :num int?) :a)))
 
 
 (deftest to-schema

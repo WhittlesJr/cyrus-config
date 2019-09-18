@@ -1,7 +1,8 @@
 (ns cyrus-config.coerce
   (:require [clojure.spec.alpha :as s]
             [clojure.edn :as edn]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [spec-coerce.core :as sc]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +68,7 @@
     (if (= result ::s/invalid)
       (throw (Exception. (str "Error coercing " (pr-str data) ": "
                               (str/trim-newline (s/explain-str spec-with-conformer data)))))
-      result)))
+      (sc/coerce spec data))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
